@@ -98,7 +98,7 @@ POST /cart/calculate
 
 Build and run the test container:
 ```bash 
-docker  compose up test -d
+docker compose up test -d
 ```
 
 This will start a container that will run the tests using the test target defined in the Dockerfile. After the tests run, the container will exit. So you can see results from logs:
@@ -132,13 +132,13 @@ This will execute the tests in your local environment using **Jest**.
 
 Here's an overview of what each test checks:
 
-1. Cart without bulk discount: Verifies that when the total is less than €50, no bulk discount is applied.
+1. **Cart without bulk discount**: Verifies that when the total is less than €50, no bulk discount is applied.
 
-2. Cart with bulk discount: Verifies that when the total is over €50, the bulk discount is applied correctly.
+2. **Cart with bulk discount**: Verifies that when the total is over €50, the bulk discount is applied correctly.
 
-3. Multiple items with mixed categories: Verifies that multiple items with different categories are handled correctly with their respective discounts.
+3. **Multiple items with mixed categories**: Verifies that multiple items with different categories are handled correctly with their respective discounts.
 
-4. Floating-point precision: Verifies that floating-point precision issues (like 0.1 + 0.2) are correctly handled with BigNumber.js.
+4. **Floating-point precision**: Verifies that floating-point precision issues (like 0.1 + 0.2) are correctly handled with BigNumber.js.
 
 <br>
 
@@ -200,22 +200,39 @@ Here's an overview of what each test checks:
 
 <hr>
 
-### Calculation Logic (CartService)
 
-*Core logic is inside cart.service.ts.*
+### 🧮 Calculation Logic (CartService)
 
-It uses **Strategy Design Pattern** for discounts:
-
-- Each discount type (CategoryDiscountRule, CartTotalDiscountRule) is a separate strategy.
-
-- Adding a new discount is simple: create a new class and add it to discountRules.
-
-<br>
-
-**VAT => Currently has been set as 20%, it can be injected from environment or config if needed.**
+The core logic of the cart calculation is implemented in `cart.service.ts`. 
 
 
-<br>
+### Design Approach: Strategy Design Pattern for applying discounts
+
+Each discount is treated as a separate strategy, for example:
+
+1. **CategoryDiscountRule**: A discount applied to specific product categories (e.g., electronics).
+
+2. **CartTotalDiscountRule**: A bulk discount applied to the entire cart if the total amount exceeds a certain threshold.
+
+
+### So How to add new discount rules?
+
+- Create a new class implementing DiscountStrategy. `/src/cart/rules`
+
+- Implement the apply method.
+
+- Add the new rule to discountRules in `/src/cart/cart.config.ts`.
+
+- Done, No changes needed in the core **CartService** 
+
+
+**💥 This way, the cart service remains flexible without touching the core logic :D**
+
+### VAT Calculation:
+
+The VAT (Value Added Tax) is currently set to `20%` by default, but it can be injected dynamically from **environment variables**.
+(I kept it simple, but a table of configs could be a good place for VAT value)
+
 
 ## ✅ Input Validation & Edge Cases
 
@@ -232,16 +249,6 @@ Prevents:
 *Note: Integration tests can be added later; currently validation ensures data correctness.*
 
 <br>
-
-## How to add new discount rules?
-
-- Create a new class implementing DiscountStrategy. (/src/cart/rules)
-
-- Implement the apply method.
-
-- Add the new rule to discountRules in /src/cart/cart.config.ts.
-
-- Done, No changes needed in the core CartService :D 
 
 
 ## 💡 Just a few notes ...
