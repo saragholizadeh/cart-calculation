@@ -233,7 +233,7 @@ Prevents:
 
 <br>
 
-## How to add nenw discount rules?
+## How to add new discount rules?
 
 - Create a new class implementing DiscountStrategy. (/src/cart/rules)
 
