@@ -1,0 +1,16 @@
+services:
+  app:
+    build:
+      context: .
+      target: production
+    image: cart-calculation
+    ports:
+      - "3000:3000"
+    command: node dist/server.js
+
+  test:
+    build:
+      context: .
+      target: test
+    image: cart-calculation-test
+    command: npm test
