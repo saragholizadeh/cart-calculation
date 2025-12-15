@@ -3,7 +3,7 @@
 A simple Node.js service that calculates the total price of a shopping cart.  
 Built with **Node.js**, **Express**, and **TypeScript**.  
 
-This project trys to demonstrate clean design, separation of concerns, and proper handling of financial calculations :)
+This project tries to demonstrate clean design, separation of concerns, and proper handling of financial calculations :)
 
 
 ## 🛠 Tools & Frameworks
