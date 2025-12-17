@@ -38,6 +38,15 @@ export class CartService {
     }
 
     private calculateSubtotal(items: CalculateCartInput["items"]): BigNumber {
+
+        // I sent the task to HR team, but two days after than, I'm thinking about what if there are millions of items?
+        // Well.. it actually doesn't happen in a real-world scenario, (cart with millions item seems insane) but for the sake of the exercise,
+        // first, we can replace classic (for ... let i = 0..) loop, because reduce is cpu-intensive and uses more memory.
+        // And for a final solution guess we can:
+        // 1. paginate for loop
+        // 2. use streams
+        // 3. or for avoding blocking event loop, use worker threads
+
         return items.reduce((sum, item) => {
             const itemTotal = new BigNumber(item.price)
                 .multipliedBy(item.quantity);
