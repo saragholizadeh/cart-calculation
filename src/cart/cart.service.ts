@@ -7,7 +7,7 @@ export class CartService {
     constructor(
         private readonly discountRules: DiscountStrategy[],
         private readonly vatPercentage: number
-    ) {}
+    ) { }
 
     calculateCart(data: CalculateCartInput): CartCalculationResult {
         const subtotal = this.calculateSubtotal(data.items);
@@ -24,7 +24,10 @@ export class CartService {
             discountsApplied = discountsApplied.plus(discount);
         }
 
-        const totalAfterDiscounts = subtotal.minus(discountsApplied);
+        const totalAfterDiscounts = BigNumber.max(
+            subtotal.minus(discountsApplied),
+            0
+        );
         const vatAmount = this.calculateVat(totalAfterDiscounts);
         const totalPayable = totalAfterDiscounts.plus(vatAmount);
 
